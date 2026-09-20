@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urljoin
+import re
+import time
 
 BASE = "https://mypcards.com"
 
@@ -15,74 +17,115 @@ headers = {
 sessao = requests.Session()
 sessao.headers.update(headers)
 
-buscas = [
-    "Charizard",
-    "RC5",
-    "RC5/83",
-    "Charizard RC5",
-    "Charizard Generations",
-]
+# Busca ampla. Depois analisaremos cada produto individualmente.
+params = {
+    "ProdutoSearch[query]": "Charizard",
+    "ProdutoSearch[exibirSomenteVenda]": "1"
+}
+
+url_busca = BASE + "/pokemon?" + urlencode(params)
 
 print("=" * 70)
-print("MINHA CAÇA POKÉMON - TESTANDO FORMAS DE BUSCA NO MYP")
+print("MINHA CAÇA POKÉMON - ANALISANDO PRODUTOS CHARIZARD")
 print("=" * 70)
 
-for termo in buscas:
+resposta = sessao.get(url_busca, timeout=30)
+print("STATUS BUSCA:", resposta.status_code)
 
-    params = {
-        "ProdutoSearch[query]": termo,
-        "ProdutoSearch[exibirSomenteVenda]": "1"
-    }
+soup = BeautifulSoup(resposta.text, "html.parser")
 
-    url = BASE + "/pokemon?" + urlencode(params)
+links = []
 
-    print()
-    print("=" * 70)
-    print("BUSCANDO:", termo)
-    print("URL:", url)
-    print("=" * 70)
+for a in soup.find_all("a", href=True):
+    href = a.get("href", "")
 
-    resposta = sessao.get(url, timeout=30)
-    print("STATUS:", resposta.status_code)
+    if "/pokemon/produto/" in href:
+        url = urljoin(BASE, href)
 
-    soup = BeautifulSoup(resposta.text, "html.parser")
+        if url not in links:
+            links.append(url)
 
-    encontrados = []
-
-    for link in soup.find_all("a", href=True):
-
-        href = link.get("href", "")
-        texto = " ".join(link.stripped_strings)
-
-        if "/pokemon/produto/" not in href:
-            continue
-
-        bloco = link.parent
-        texto_bloco = " ".join(bloco.stripped_strings) if bloco else texto
-
-        encontrados.append({
-            "texto": texto,
-            "link": href,
-            "bloco": texto_bloco[:500]
-        })
-
-    # remove links repetidos
-    unicos = {}
-    for item in encontrados:
-        unicos[item["link"]] = item
-
-    encontrados = list(unicos.values())
-
-    print("PRODUTOS ENCONTRADOS:", len(encontrados))
-
-    for numero, item in enumerate(encontrados[:15], 1):
-        print()
-        print("RESULTADO", numero)
-        print("TEXTO:", item["texto"])
-        print("LINK:", item["link"])
-        print("BLOCO:", item["bloco"])
-
+print("PRODUTOS ÚNICOS ENCONTRADOS:", len(links))
 print()
+
+# Primeiro vamos analisar no máximo 30 produtos.
+for numero, url in enumerate(links[:30], 1):
+
+    print("=" * 70)
+    print("PRODUTO", numero)
+    print("URL:", url)
+
+    try:
+        r = sessao.get(url, timeout=30)
+        print("STATUS:", r.status_code)
+
+        pagina = BeautifulSoup(r.text, "html.parser")
+
+        titulo = pagina.title.get_text(" ", strip=True) if pagina.title else ""
+
+        h1 = pagina.find("h1")
+        h1_texto = h1.get_text(" ", strip=True) if h1 else ""
+
+        texto = " ".join(pagina.stripped_strings)
+
+        # procura informações que podem identificar nossa carta
+        trechos = []
+
+        termos = [
+            "RC5",
+            "RC5/83",
+            "Generations",
+            "Gerações",
+            "Charizard"
+        ]
+
+        for termo in termos:
+            pos = texto.lower().find(termo.lower())
+
+            if pos != -1:
+                inicio = max(0, pos - 180)
+                fim = min(len(texto), pos + 350)
+
+                trecho = texto[inicio:fim]
+
+                if trecho not in trechos:
+                    trechos.append(trecho)
+
+        # preços encontrados na página
+        precos = re.findall(
+            r'R\$\s*[0-9\.\,]+',
+            texto
+        )
+
+        # remove preços repetidos mantendo a ordem
+        precos_unicos = []
+
+        for preco in precos:
+            if preco not in precos_unicos:
+                precos_unicos.append(preco)
+
+        print("TÍTULO:", titulo)
+        print("H1:", h1_texto)
+
+        print("PREÇOS ENCONTRADOS:", precos_unicos[:15])
+
+        print("--- TRECHOS IMPORTANTES ---")
+
+        if trechos:
+            for trecho in trechos[:5]:
+                print(trecho)
+                print()
+        else:
+            print("Nenhum trecho relevante encontrado.")
+
+        print()
+
+        # pequena pausa para não bombardear o site
+        time.sleep(0.3)
+
+    except Exception as erro:
+        print("ERRO AO ANALISAR:", erro)
+
 print("=" * 70)
-print("TESTE FINALIZADO")
+print("ANÁLISE FINALIZADA")
 print("=" * 70)
