@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-import re
+from urllib.parse import urljoin
+
+BASE = "https://mypcards.com"
 
 headers = {
     "User-Agent": (
@@ -10,94 +12,150 @@ headers = {
     )
 }
 
-# Primeiro vamos descobrir como o MYP entrega resultados
-# para o Charizard RC5 da nossa wishlist.
-url = "https://mypcards.com/pokemon"
-
-print("=" * 70)
-print("MINHA CAÇA POKÉMON - TESTE DETALHADO MYP")
-print("Carta: Charizard RC5 / Generations")
-print("=" * 70)
-
 sessao = requests.Session()
 sessao.headers.update(headers)
 
-try:
-    resposta = sessao.get(url, timeout=30)
+# CARTA DE TESTE
+busca = "Charizard RC5"
 
-    print("STATUS:", resposta.status_code)
-    print("URL FINAL:", resposta.url)
-    print("TAMANHO:", len(resposta.text))
+print("=" * 70)
+print("MINHA CAÇA POKÉMON - BUSCA REAL NO MYP")
+print("BUSCANDO:", busca)
+print("=" * 70)
 
-    soup = BeautifulSoup(resposta.text, "html.parser")
+params = {
+    "ProdutoSearch[query]": busca,
+    "ProdutoSearch[exibirSomenteVenda]": "1"
+}
 
-    print("\n--- TÍTULO ---")
-    print(soup.title.get_text(" ", strip=True) if soup.title else "Sem título")
+url = BASE + "/pokemon"
 
-    print("\n--- FORMULÁRIOS ENCONTRADOS ---")
+resposta = sessao.get(
+    url,
+    params=params,
+    timeout=30
+)
 
-    formularios = soup.find_all("form")
+print("\nSTATUS:", resposta.status_code)
+print("URL DA BUSCA:", resposta.url)
+print("TAMANHO:", len(resposta.text))
 
-    for numero, form in enumerate(formularios, 1):
-        print(f"\nFORMULÁRIO {numero}")
-        print("ACTION:", form.get("action"))
-        print("METHOD:", form.get("method"))
+if resposta.status_code != 200:
+    raise Exception(
+        f"MYP respondeu com status {resposta.status_code}"
+    )
 
-        for campo in form.find_all(["input", "select"]):
-            print(
-                "CAMPO:",
-                campo.name,
-                "NAME=", campo.get("name"),
-                "VALUE=", campo.get("value"),
-                "PLACEHOLDER=", campo.get("placeholder")
+soup = BeautifulSoup(resposta.text, "html.parser")
+
+print("\n" + "=" * 70)
+print("PRODUTOS ENCONTRADOS")
+print("=" * 70)
+
+produtos = {}
+total = 0
+
+for link in soup.find_all("a", href=True):
+
+    href = link.get("href", "")
+
+    # Produtos individuais do MYP
+    if "/pokemon/produto/" not in href:
+        continue
+
+    url_produto = urljoin(BASE, href)
+
+    # Evita mostrar o mesmo produto várias vezes
+    if url_produto in produtos:
+        continue
+
+    bloco = link
+
+    # Sobe alguns níveis procurando o bloco completo do produto
+    for _ in range(5):
+        if bloco.parent:
+            bloco = bloco.parent
+
+    texto = bloco.get_text(" ", strip=True)
+
+    # Só queremos resultados relacionados ao Charizard
+    if "charizard" not in texto.lower() and "charizard" not in href.lower():
+        continue
+
+    total += 1
+
+    produtos[url_produto] = texto
+
+    print("\n" + "-" * 70)
+    print("PRODUTO", total)
+    print("LINK:", url_produto)
+    print("TEXTO:")
+    print(texto[:1200])
+
+print("\n" + "=" * 70)
+print("TOTAL DE PRODUTOS:", total)
+print("=" * 70)
+
+# Agora abre cada produto encontrado para procurar ofertas
+for numero, (url_produto, texto_produto) in enumerate(
+    produtos.items(), 1
+):
+
+    print("\n\n" + "#" * 70)
+    print("ANALISANDO PRODUTO", numero)
+    print(url_produto)
+    print("#" * 70)
+
+    try:
+
+        pagina = sessao.get(
+            url_produto,
+            timeout=30
+        )
+
+        print("STATUS PRODUTO:", pagina.status_code)
+
+        produto_soup = BeautifulSoup(
+            pagina.text,
+            "html.parser"
+        )
+
+        texto_completo = produto_soup.get_text(
+            " ",
+            strip=True
+        )
+
+        # Mostra trechos que contenham R$
+        partes = []
+
+        for elemento in produto_soup.find_all(
+            ["div", "li", "tr", "article"]
+        ):
+
+            texto = elemento.get_text(
+                " ",
+                strip=True
             )
 
-    print("\n--- LINKS COM CHARIZARD ---")
+            if "R$" not in texto:
+                continue
 
-    encontrados = 0
+            # Evita blocos gigantes
+            if len(texto) > 1000:
+                continue
 
-    for link in soup.find_all("a", href=True):
-        texto = link.get_text(" ", strip=True)
-        href = link.get("href", "")
+            if texto not in partes:
+                partes.append(texto)
 
-        if "charizard" in (texto + " " + href).lower():
-            encontrados += 1
-            print("\nTEXTO:", texto[:250])
-            print("LINK:", href)
+        print("\nPOSSÍVEIS OFERTAS:")
 
-            pai = link.parent
+        if not partes:
+            print("Nenhuma oferta identificada.")
 
-            if pai:
-                bloco = pai.get_text(" ", strip=True)
-                precos = re.findall(
-                    r"R\$\s*\d+(?:\.\d{3})*(?:,\d{2})?",
-                    bloco
-                )
+        for i, parte in enumerate(partes[:30], 1):
+            print(f"\nOFERTA/BLOCO {i}:")
+            print(parte)
 
-                if precos:
-                    print("PREÇOS NO BLOCO:", precos[:10])
+    except Exception as erro:
+        print("ERRO AO ANALISAR PRODUTO:", repr(erro))
 
-            if encontrados >= 20:
-                break
-
-    print("\nTOTAL DE LINKS CHARIZARD MOSTRADOS:", encontrados)
-
-    print("\n--- TEXTOS COM RC5 ---")
-
-    texto_total = soup.get_text(" ", strip=True)
-
-    posicao = texto_total.lower().find("rc5")
-
-    if posicao >= 0:
-        inicio = max(0, posicao - 500)
-        fim = min(len(texto_total), posicao + 1000)
-
-        print(texto_total[inicio:fim])
-    else:
-        print("RC5 não apareceu diretamente na página inicial.")
-
-    print("\nTESTE CONCLUÍDO")
-
-except Exception as erro:
-    print("ERRO:", repr(erro))
-    raise
+print("\n\nTESTE FINALIZADO")
