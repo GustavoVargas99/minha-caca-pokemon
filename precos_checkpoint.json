@@ -1,0 +1,369 @@
+{
+  "atualizado_em": "2026-09-20T16:51:50.809421+00:00",
+  "regra": "Prioridade MYP; menor entre NM/SP; MP/DM separados para análise; mesma arte pode ser outra edição/idioma.",
+  "cartas": [
+    {
+      "melhor_nm_sp": {
+        "condicao": "NM",
+        "preco": 50.0,
+        "url": "https://mypcards.com/pokemon/produto/109833/charizard-v",
+        "detalhe": "4 un."
+      },
+      "menor_por_condicao": {
+        "NM": {
+          "condicao": "NM",
+          "preco": 50.0,
+          "url": "https://mypcards.com/pokemon/produto/109833/charizard-v",
+          "detalhe": "4 un."
+        },
+        "SP": {
+          "condicao": "SP",
+          "preco": 69.9,
+          "url": "https://mypcards.com/pokemon/produto/109833/charizard-v",
+          "detalhe": "1 un."
+        },
+        "MP": {
+          "condicao": "MP",
+          "preco": 39.99,
+          "url": "https://mypcards.com/pokemon/produto/144328/lances-charizard-v",
+          "detalhe": "1 un."
+        },
+        "DM": {
+          "condicao": "DM",
+          "preco": 35.0,
+          "url": "https://mypcards.com/pokemon/produto/109833/charizard-v",
+          "detalhe": "atras mp apenas esse risco na carta 1 un."
+        }
+      },
+      "mp_dm_para_analisar": [
+        {
+          "condicao": "MP",
+          "preco": 39.99,
+          "url": "https://mypcards.com/pokemon/produto/144328/lances-charizard-v",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 65.0,
+          "url": "https://mypcards.com/pokemon/produto/109833/charizard-v",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 89.9,
+          "url": "https://mypcards.com/pokemon/produto/144328/lances-charizard-v",
+          "detalhe": "Whitening nas bordas e quina levemente dobrada. Solicitar fotos. 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 35.0,
+          "url": "https://mypcards.com/pokemon/produto/109833/charizard-v",
+          "detalhe": "atras mp apenas esse risco na carta 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 400.0,
+          "url": "https://mypcards.com/pokemon/produto/129695/charizard-vmax",
+          "detalhe": "Mais detalhes no PV 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 600.0,
+          "url": "https://mypcards.com/pokemon/produto/129695/charizard-vmax",
+          "detalhe": "Frente bonita 1 un."
+        }
+      ],
+      "total_anuncios": 136,
+      "grupo": "Wishlist",
+      "nome": "Charizard V 132/127",
+      "numero": "CS5AC",
+      "imagem_referencia": "",
+      "fonte_prioritaria": "MYP Cards",
+      "produtos_compativeis": [
+        {
+          "url": "https://mypcards.com/pokemon/produto/144328/lances-charizard-v",
+          "titulo": "Lance&#039;s Charizard V (SWSH133) | Pokémon | MYP Cards",
+          "h1": "Lance's Charizard V (SWSH133)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/129695/charizard-vmax",
+          "titulo": "Charizard VMAX (107/122) | Pokémon | MYP Cards",
+          "h1": "Charizard VMAX (107/122)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/175699/charizard-v",
+          "titulo": "Charizard V (SWSH260) | Pokémon | MYP Cards",
+          "h1": "Charizard V (SWSH260)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/109833/charizard-v",
+          "titulo": "Charizard V (019/189) | Pokémon | MYP Cards",
+          "h1": "Charizard V (019/189)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/175700/charizard-vmax",
+          "titulo": "Charizard VMAX (SWSH261) | Pokémon | MYP Cards",
+          "h1": "Charizard VMAX (SWSH261)"
+        }
+      ],
+      "_chave": "Wishlist|Charizard V 132/127|CS5AC|"
+    },
+    {
+      "melhor_nm_sp": {
+        "condicao": "SP",
+        "preco": 180.0,
+        "url": "https://mypcards.com/pokemon/produto/109834/charizard-vmax",
+        "detalhe": "031/115 1 un."
+      },
+      "menor_por_condicao": {
+        "NM": {
+          "condicao": "NM",
+          "preco": 270.0,
+          "url": "https://mypcards.com/pokemon/produto/109834/charizard-vmax",
+          "detalhe": "5 un."
+        },
+        "SP": {
+          "condicao": "SP",
+          "preco": 180.0,
+          "url": "https://mypcards.com/pokemon/produto/109834/charizard-vmax",
+          "detalhe": "031/115 1 un."
+        },
+        "MP": {
+          "condicao": "MP",
+          "preco": 120.0,
+          "url": "https://mypcards.com/pokemon/produto/109834/charizard-vmax",
+          "detalhe": "1 un."
+        },
+        "DM": {
+          "condicao": "DM",
+          "preco": 400.0,
+          "url": "https://mypcards.com/pokemon/produto/129695/charizard-vmax",
+          "detalhe": "Mais detalhes no PV 1 un."
+        }
+      },
+      "mp_dm_para_analisar": [
+        {
+          "condicao": "MP",
+          "preco": 120.0,
+          "url": "https://mypcards.com/pokemon/produto/109834/charizard-vmax",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 260.0,
+          "url": "https://mypcards.com/pokemon/produto/175700/charizard-vmax",
+          "detalhe": "bordas um pouco gasta e parte de tras azul esverdeado 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 400.0,
+          "url": "https://mypcards.com/pokemon/produto/129695/charizard-vmax",
+          "detalhe": "Mais detalhes no PV 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 600.0,
+          "url": "https://mypcards.com/pokemon/produto/129695/charizard-vmax",
+          "detalhe": "Frente bonita 1 un."
+        }
+      ],
+      "total_anuncios": 70,
+      "grupo": "Wishlist",
+      "nome": "Charizard VMAX SV107/SV122",
+      "numero": "Shining Fates",
+      "imagem_referencia": "https://images.pokemontcg.io/swsh45sv/SV107_hires.png",
+      "fonte_prioritaria": "MYP Cards",
+      "produtos_compativeis": [
+        {
+          "url": "https://mypcards.com/pokemon/produto/129695/charizard-vmax",
+          "titulo": "Charizard VMAX (107/122) | Pokémon | MYP Cards",
+          "h1": "Charizard VMAX (107/122)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/175700/charizard-vmax",
+          "titulo": "Charizard VMAX (SWSH261) | Pokémon | MYP Cards",
+          "h1": "Charizard VMAX (SWSH261)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/109834/charizard-vmax",
+          "titulo": "Charizard VMAX (020/189) | Pokémon | MYP Cards",
+          "h1": "Charizard VMAX (020/189)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/113362/charizard-vmax",
+          "titulo": "Charizard VMAX (074/73) | Pokémon | MYP Cards",
+          "h1": "Charizard VMAX (074/73)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/281468/charizard-vmax-002021",
+          "titulo": "Charizard-VMAX (002/021) (002/021) | Pokémon | MYP Cards",
+          "h1": "Charizard-VMAX (002/021) (002/021)"
+        }
+      ],
+      "_chave": "Wishlist|Charizard VMAX SV107/SV122|Shining Fates|https://images.pokemontcg.io/swsh45sv/SV107_hires.png"
+    },
+    {
+      "melhor_nm_sp": {
+        "condicao": "SP",
+        "preco": 9499.99,
+        "url": "https://mypcards.com/pokemon/produto/37933/shining-charizard",
+        "detalhe": "1 un."
+      },
+      "menor_por_condicao": {
+        "NM": null,
+        "SP": {
+          "condicao": "SP",
+          "preco": 9499.99,
+          "url": "https://mypcards.com/pokemon/produto/37933/shining-charizard",
+          "detalhe": "1 un."
+        },
+        "MP": {
+          "condicao": "MP",
+          "preco": 12000.0,
+          "url": "https://mypcards.com/pokemon/produto/37933/shining-charizard",
+          "detalhe": "1 un."
+        },
+        "DM": null
+      },
+      "mp_dm_para_analisar": [
+        {
+          "condicao": "MP",
+          "preco": 12000.0,
+          "url": "https://mypcards.com/pokemon/produto/37933/shining-charizard",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 20000.0,
+          "url": "https://mypcards.com/pokemon/produto/37933/shining-charizard",
+          "detalhe": "1 un."
+        }
+      ],
+      "total_anuncios": 3,
+      "grupo": "Wishlist",
+      "nome": "Shining Charizard 025/113",
+      "numero": "DATL",
+      "imagem_referencia": "",
+      "fonte_prioritaria": "MYP Cards",
+      "produtos_compativeis": [
+        {
+          "url": "https://mypcards.com/pokemon/produto/37933/shining-charizard",
+          "titulo": "Shining Charizard (107/105) | Pokémon | MYP Cards",
+          "h1": "Shining Charizard (107/105)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/451541/shining-charizard",
+          "titulo": "Shining Charizard (071/113) | Pokémon | MYP Cards",
+          "h1": "Shining Charizard (071/113)"
+        }
+      ],
+      "_chave": "Wishlist|Shining Charizard 025/113|DATL|"
+    },
+    {
+      "melhor_nm_sp": {
+        "condicao": "NM",
+        "preco": 19.0,
+        "url": "https://mypcards.com/pokemon/produto/314714/mega-charizard-y-ex",
+        "detalhe": "1 un."
+      },
+      "menor_por_condicao": {
+        "NM": {
+          "condicao": "NM",
+          "preco": 19.0,
+          "url": "https://mypcards.com/pokemon/produto/314714/mega-charizard-y-ex",
+          "detalhe": "1 un."
+        },
+        "SP": {
+          "condicao": "SP",
+          "preco": 20.0,
+          "url": "https://mypcards.com/pokemon/produto/314714/mega-charizard-y-ex",
+          "detalhe": "1 un."
+        },
+        "MP": {
+          "condicao": "MP",
+          "preco": 50.0,
+          "url": "https://mypcards.com/pokemon/produto/95816/charizard-e-braixen-gx",
+          "detalhe": "2 un."
+        },
+        "DM": {
+          "condicao": "DM",
+          "preco": 40.0,
+          "url": "https://mypcards.com/pokemon/produto/95816/charizard-e-braixen-gx",
+          "detalhe": "frente basicamente perfeita, verso com desgaste forte 1 un."
+        }
+      },
+      "mp_dm_para_analisar": [
+        {
+          "condicao": "MP",
+          "preco": 50.0,
+          "url": "https://mypcards.com/pokemon/produto/95816/charizard-e-braixen-gx",
+          "detalhe": "2 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 60.0,
+          "url": "https://mypcards.com/pokemon/produto/95816/charizard-e-braixen-gx",
+          "detalhe": "bom estado, mas possui detalhes nas bordas e marcas de uso nas bordas de trás 1 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 60.0,
+          "url": "https://mypcards.com/pokemon/produto/95816/charizard-e-braixen-gx",
+          "detalhe": "alguns ponto branco e um leve massado 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 40.0,
+          "url": "https://mypcards.com/pokemon/produto/95816/charizard-e-braixen-gx",
+          "detalhe": "frente basicamente perfeita, verso com desgaste forte 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 40.0,
+          "url": "https://mypcards.com/pokemon/produto/95816/charizard-e-braixen-gx",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 40.0,
+          "url": "https://mypcards.com/pokemon/produto/95816/charizard-e-braixen-gx",
+          "detalhe": "foil intacto carta com leve dobra marca de pressao so atraas 1 un."
+        }
+      ],
+      "total_anuncios": 125,
+      "grupo": "Wishlist",
+      "nome": "Charizard 02/25",
+      "numero": "CCC",
+      "imagem_referencia": "https://images.pokemontcg.io/cel25c/4_hires.png",
+      "fonte_prioritaria": "MYP Cards",
+      "produtos_compativeis": [
+        {
+          "url": "https://mypcards.com/pokemon/produto/300731/mega-charizard-x-ex",
+          "titulo": "Mega Charizard X ex (125/094) | Pokémon | MYP Cards",
+          "h1": "Mega Charizard X ex (125/094)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/314714/mega-charizard-y-ex",
+          "titulo": "Mega Charizard Y ex (030) | Pokémon | MYP Cards",
+          "h1": "Mega Charizard Y ex (030)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/314715/mega-charizard-x-ex",
+          "titulo": "Mega Charizard X ex (029) | Pokémon | MYP Cards",
+          "h1": "Mega Charizard X ex (029)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/95816/charizard-e-braixen-gx",
+          "titulo": "Charizard e Braixen-GX (022/236) / Charizard &amp; Braixen-GX | Pokémon | MYP Cards",
+          "h1": "Charizard e Braixen-GX (022/236) Charizard & Braixen-GX"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/456300/charizard",
+          "titulo": "Charizard (004/102) | Pokémon | MYP Cards",
+          "h1": "Charizard (004/102)"
+        }
+      ],
+      "_chave": "Wishlist|Charizard 02/25|CCC|https://images.pokemontcg.io/cel25c/4_hires.png"
+    }
+  ]
+}
