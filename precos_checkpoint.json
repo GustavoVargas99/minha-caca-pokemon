@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-09-20T18:26:05.357592+00:00",
+  "atualizado_em": "2026-09-20T20:23:47.877941+00:00",
   "regra": "Prioridade MYP; menor entre NM/SP; MP/DM separados para análise; mesma arte pode ser outra edição/idioma.",
   "cartas": [
     {
@@ -612,6 +612,282 @@
         }
       ],
       "_chave": "Wishlist|Mega Charizard X ex 125/094|PFL|"
+    },
+    {
+      "melhor_nm_sp": {
+        "condicao": "SP",
+        "preco": 140.0,
+        "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+        "detalhe": "1 un."
+      },
+      "menor_por_condicao": {
+        "NM": {
+          "condicao": "NM",
+          "preco": 200.0,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        },
+        "SP": {
+          "condicao": "SP",
+          "preco": 140.0,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        },
+        "MP": {
+          "condicao": "MP",
+          "preco": 119.99,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        },
+        "DM": {
+          "condicao": "DM",
+          "preco": 100.0,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        }
+      },
+      "mp_dm_para_analisar": [
+        {
+          "condicao": "MP",
+          "preco": 119.99,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 149.99,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 150.0,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 100.0,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 100.0,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "Foil e reverse foil. No sleeve. D bem razoável, fica bem na pasta Carta incrível 1 un."
+        }
+      ],
+      "total_anuncios": 30,
+      "grupo": "Wishlist",
+      "nome": "Charizard RC5/RC32",
+      "numero": "Generations",
+      "imagem_referencia": "https://images.pokemontcg.io/g1/RC5_hires.png",
+      "fonte_prioritaria": "MYP Cards",
+      "produtos_compativeis": [
+        {
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "titulo": "Charizard (RC5/RC32) | Pokémon | MYP Cards",
+          "h1": "Charizard (RC5/RC32)"
+        }
+      ],
+      "_chave": "Wishlist|Charizard RC5/RC32|Generations|https://images.pokemontcg.io/g1/RC5_hires.png"
+    },
+    {
+      "melhor_nm_sp": {
+        "condicao": "NM",
+        "preco": 20.0,
+        "url": "https://mypcards.com/pokemon/produto/264989/charizard-ex",
+        "detalhe": "1 un."
+      },
+      "menor_por_condicao": {
+        "NM": {
+          "condicao": "NM",
+          "preco": 20.0,
+          "url": "https://mypcards.com/pokemon/produto/264989/charizard-ex",
+          "detalhe": "1 un."
+        },
+        "SP": {
+          "condicao": "SP",
+          "preco": 24.0,
+          "url": "https://mypcards.com/pokemon/produto/264989/charizard-ex",
+          "detalhe": "2 un."
+        },
+        "MP": {
+          "condicao": "MP",
+          "preco": 119.99,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        },
+        "DM": {
+          "condicao": "DM",
+          "preco": 100.0,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        }
+      },
+      "mp_dm_para_analisar": [
+        {
+          "condicao": "MP",
+          "preco": 119.99,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 149.99,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 150.0,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 100.0,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 100.0,
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "detalhe": "Foil e reverse foil. No sleeve. D bem razoável, fica bem na pasta Carta incrível 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 1900.0,
+          "url": "https://mypcards.com/pokemon/produto/300736/mega-charizard-x-ex",
+          "detalhe": "1 un."
+        }
+      ],
+      "total_anuncios": 118,
+      "grupo": "Wishlist",
+      "nome": "Charizard 146/144",
+      "numero": "Skyridge",
+      "imagem_referencia": "https://images.pokemontcg.io/ecard3/146_hires.png",
+      "fonte_prioritaria": "MYP Cards",
+      "produtos_compativeis": [
+        {
+          "url": "https://mypcards.com/pokemon/produto/175700/charizard-vmax",
+          "titulo": "Charizard VMAX (SWSH261) | Pokémon | MYP Cards",
+          "h1": "Charizard VMAX (SWSH261)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/456300/charizard",
+          "titulo": "Charizard (004/102) | Pokémon | MYP Cards",
+          "h1": "Charizard (004/102)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+          "titulo": "Charizard (RC5/RC32) | Pokémon | MYP Cards",
+          "h1": "Charizard (RC5/RC32)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/264989/charizard-ex",
+          "titulo": "Charizard ex (161) | Pokémon | MYP Cards",
+          "h1": "Charizard ex (161)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/300736/mega-charizard-x-ex",
+          "titulo": "Mega Charizard X ex (130/094) | Pokémon | MYP Cards",
+          "h1": "Mega Charizard X ex (130/094)"
+        }
+      ],
+      "_chave": "Wishlist|Charizard 146/144|Skyridge|https://images.pokemontcg.io/ecard3/146_hires.png"
+    },
+    {
+      "melhor_nm_sp": {
+        "condicao": "SP",
+        "preco": 790.0,
+        "url": "https://mypcards.com/pokemon/produto/40979/dark-charizard",
+        "detalhe": "Nenhum risco ou dobra, apenas desgaste leve de manuseio/jogo. 1 un."
+      },
+      "menor_por_condicao": {
+        "NM": {
+          "condicao": "NM",
+          "preco": 1250.0,
+          "url": "https://mypcards.com/pokemon/produto/40979/dark-charizard",
+          "detalhe": "1 un."
+        },
+        "SP": {
+          "condicao": "SP",
+          "preco": 790.0,
+          "url": "https://mypcards.com/pokemon/produto/40979/dark-charizard",
+          "detalhe": "Nenhum risco ou dobra, apenas desgaste leve de manuseio/jogo. 1 un."
+        },
+        "MP": {
+          "condicao": "MP",
+          "preco": 989.9,
+          "url": "https://mypcards.com/pokemon/produto/40979/dark-charizard",
+          "detalhe": "1 un."
+        },
+        "DM": {
+          "condicao": "DM",
+          "preco": 400.0,
+          "url": "https://mypcards.com/pokemon/produto/40962/dark-charizard",
+          "detalhe": "O pequeno arranhão em branco é o motivo de estar como DM. 1 un."
+        }
+      },
+      "mp_dm_para_analisar": [
+        {
+          "condicao": "MP",
+          "preco": 989.9,
+          "url": "https://mypcards.com/pokemon/produto/40979/dark-charizard",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 1750.0,
+          "url": "https://mypcards.com/pokemon/produto/40962/dark-charizard",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 400.0,
+          "url": "https://mypcards.com/pokemon/produto/40962/dark-charizard",
+          "detalhe": "O pequeno arranhão em branco é o motivo de estar como DM. 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 1700.0,
+          "url": "https://mypcards.com/pokemon/produto/40962/dark-charizard",
+          "detalhe": "Não é 1º edição. 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 1800.0,
+          "url": "https://mypcards.com/pokemon/produto/40962/dark-charizard",
+          "detalhe": "1 un."
+        }
+      ],
+      "total_anuncios": 11,
+      "grupo": "Wishlist",
+      "nome": "Dark Charizard 21/82",
+      "numero": "Team Rocket",
+      "imagem_referencia": "https://images.pokemontcg.io/base5/21_hires.png",
+      "fonte_prioritaria": "MYP Cards",
+      "produtos_compativeis": [
+        {
+          "url": "https://mypcards.com/pokemon/produto/40962/dark-charizard",
+          "titulo": "Dark Charizard (004/82) | Pokémon | MYP Cards",
+          "h1": "Dark Charizard (004/82)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/40979/dark-charizard",
+          "titulo": "Dark Charizard (021/82) | Pokémon | MYP Cards",
+          "h1": "Dark Charizard (021/82)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/415604/dark-charizard",
+          "titulo": "Dark Charizard (033/065) | Pokémon | MYP Cards",
+          "h1": "Dark Charizard (033/065)"
+        }
+      ],
+      "_chave": "Wishlist|Dark Charizard 21/82|Team Rocket|https://images.pokemontcg.io/base5/21_hires.png"
     }
   ]
 }
