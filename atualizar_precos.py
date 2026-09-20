@@ -1,10 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlencode, urljoin
 import re
-import time
+import json
+from datetime import datetime
 
-BASE = "https://mypcards.com"
+URL = "https://mypcards.com/pokemon/produto/36248/charizard"
 
 headers = {
     "User-Agent": (
@@ -14,118 +14,156 @@ headers = {
     )
 }
 
-sessao = requests.Session()
-sessao.headers.update(headers)
-
-# Busca ampla. Depois analisaremos cada produto individualmente.
-params = {
-    "ProdutoSearch[query]": "Charizard",
-    "ProdutoSearch[exibirSomenteVenda]": "1"
-}
-
-url_busca = BASE + "/pokemon?" + urlencode(params)
-
 print("=" * 70)
-print("MINHA CAÇA POKÉMON - ANALISANDO PRODUTOS CHARIZARD")
+print("MINHA CAÇA POKÉMON - CHARIZARD RC5/RC32")
 print("=" * 70)
 
-resposta = sessao.get(url_busca, timeout=30)
-print("STATUS BUSCA:", resposta.status_code)
+resposta = requests.get(URL, headers=headers, timeout=30)
+
+print("STATUS:", resposta.status_code)
+print("URL:", URL)
 
 soup = BeautifulSoup(resposta.text, "html.parser")
 
-links = []
+titulo = soup.find("h1")
+titulo = titulo.get_text(" ", strip=True) if titulo else "Charizard"
 
-for a in soup.find_all("a", href=True):
-    href = a.get("href", "")
-
-    if "/pokemon/produto/" in href:
-        url = urljoin(BASE, href)
-
-        if url not in links:
-            links.append(url)
-
-print("PRODUTOS ÚNICOS ENCONTRADOS:", len(links))
+print("CARTA:", titulo)
 print()
 
-# Primeiro vamos analisar no máximo 30 produtos.
-for numero, url in enumerate(links[:30], 1):
+# Procura blocos da página que contenham condição e preço
+resultados = []
 
-    print("=" * 70)
-    print("PRODUTO", numero)
-    print("URL:", url)
+for elemento in soup.find_all(["div", "li", "tr"]):
 
-    try:
-        r = sessao.get(url, timeout=30)
-        print("STATUS:", r.status_code)
+    texto = " ".join(elemento.stripped_strings)
 
-        pagina = BeautifulSoup(r.text, "html.parser")
+    if not texto:
+        continue
 
-        titulo = pagina.title.get_text(" ", strip=True) if pagina.title else ""
+    condicoes = re.findall(
+        r'(?<![A-Za-z])(NM|SP|MP|HP|DM)(?![A-Za-z])',
+        texto,
+        flags=re.IGNORECASE
+    )
 
-        h1 = pagina.find("h1")
-        h1_texto = h1.get_text(" ", strip=True) if h1 else ""
+    precos = re.findall(
+        r'R\$\s*[0-9\.]+,[0-9]{2}',
+        texto
+    )
 
-        texto = " ".join(pagina.stripped_strings)
+    if condicoes and precos:
 
-        # procura informações que podem identificar nossa carta
-        trechos = []
-
-        termos = [
-            "RC5",
-            "RC5/83",
-            "Generations",
-            "Gerações",
-            "Charizard"
-        ]
-
-        for termo in termos:
-            pos = texto.lower().find(termo.lower())
-
-            if pos != -1:
-                inicio = max(0, pos - 180)
-                fim = min(len(texto), pos + 350)
-
-                trecho = texto[inicio:fim]
-
-                if trecho not in trechos:
-                    trechos.append(trecho)
-
-        # preços encontrados na página
-        precos = re.findall(
-            r'R\$\s*[0-9\.\,]+',
-            texto
-        )
-
-        # remove preços repetidos mantendo a ordem
-        precos_unicos = []
+        condicao = condicoes[0].upper()
 
         for preco in precos:
-            if preco not in precos_unicos:
-                precos_unicos.append(preco)
 
-        print("TÍTULO:", titulo)
-        print("H1:", h1_texto)
+            valor = preco.replace("R$", "").strip()
+            valor = valor.replace(".", "").replace(",", ".")
 
-        print("PREÇOS ENCONTRADOS:", precos_unicos[:15])
+            try:
+                valor_float = float(valor)
+            except:
+                continue
 
-        print("--- TRECHOS IMPORTANTES ---")
+            # evita lixo óbvio da página
+            if valor_float <= 0 or valor_float > 100000:
+                continue
 
-        if trechos:
-            for trecho in trechos[:5]:
-                print(trecho)
-                print()
-        else:
-            print("Nenhum trecho relevante encontrado.")
+            resultados.append({
+                "condicao": condicao,
+                "preco": valor_float
+            })
 
-        print()
+# Remove duplicações exatas
+unicos = []
 
-        # pequena pausa para não bombardear o site
-        time.sleep(0.3)
+for item in resultados:
+    if item not in unicos:
+        unicos.append(item)
 
-    except Exception as erro:
-        print("ERRO AO ANALISAR:", erro)
+resultados = unicos
 
+print("ANÚNCIOS IDENTIFICADOS:")
+print()
+
+for item in resultados:
+    print(
+        item["condicao"],
+        "- R$",
+        f'{item["preco"]:.2f}'.replace(".", ",")
+    )
+
+print()
 print("=" * 70)
-print("ANÁLISE FINALIZADA")
+
+# Agrupa por condição
+por_condicao = {}
+
+for item in resultados:
+    condicao = item["condicao"]
+
+    if condicao not in por_condicao:
+        por_condicao[condicao] = []
+
+    por_condicao[condicao].append(item["preco"])
+
+print("RESUMO POR CONSERVAÇÃO:")
+print()
+
+resumo = {}
+
+for condicao in ["DM", "HP", "MP", "SP", "NM"]:
+
+    valores = por_condicao.get(condicao, [])
+
+    if valores:
+
+        valores = sorted(valores)
+
+        minimo = min(valores)
+        media = sum(valores) / len(valores)
+        maximo = max(valores)
+
+        resumo[condicao] = {
+            "menor": round(minimo, 2),
+            "media": round(media, 2),
+            "maior": round(maximo, 2),
+            "quantidade": len(valores)
+        }
+
+        print(
+            condicao,
+            "| menor: R$",
+            f"{minimo:.2f}".replace(".", ","),
+            "| média: R$",
+            f"{media:.2f}".replace(".", ","),
+            "| maior: R$",
+            f"{maximo:.2f}".replace(".", ","),
+            "| anúncios:",
+            len(valores)
+        )
+
+print()
+print("=" * 70)
+
+# Cria arquivo que depois será lido pelo site
+dados = {
+    "carta": "Charizard RC5/RC32",
+    "fonte": "MYP Cards",
+    "url": URL,
+    "atualizado_em": datetime.now().isoformat(),
+    "precos": resumo
+}
+
+with open("precos.json", "w", encoding="utf-8") as arquivo:
+    json.dump(
+        dados,
+        arquivo,
+        ensure_ascii=False,
+        indent=2
+    )
+
+print("Arquivo precos.json criado.")
+print("ATUALIZAÇÃO CONCLUÍDA")
 print("=" * 70)
