@@ -8,9 +8,14 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: atualizar-precos-pokemon
+  cancel-in-progress: false
+
 jobs:
   atualizar:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Baixar catálogo
@@ -25,12 +30,15 @@ jobs:
         run: pip install requests beautifulsoup4
 
       - name: Executar atualizador
-        run: python atualizar_precos.py
+        env:
+          LOTE_CARTAS: "5"
+        run: python -u atualizar_precos.py
 
       - name: Salvar alterações
+        if: always()
         run: |
           git config user.name "Minha Caça Pokémon"
           git config user.email "actions@github.com"
-          git add .
-          git diff --cached --quiet || git commit -m "Atualiza preços Pokémon"
+          git add precos.json precos_checkpoint.json 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "Atualiza lote de preços Pokémon"
           git push
