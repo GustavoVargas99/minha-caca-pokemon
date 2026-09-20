@@ -1,0 +1,36 @@
+name: Atualizar preços Pokémon
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */2 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar catálogo
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependências
+        run: pip install requests beautifulsoup4
+
+      - name: Executar atualizador
+        run: python atualizar_precos.py
+
+      - name: Salvar alterações
+        run: |
+          git config user.name "Minha Caça Pokémon"
+          git config user.email "actions@github.com"
+          git add .
+          git diff --cached --quiet || git commit -m "Atualiza preços Pokémon"
+          git push
