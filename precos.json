@@ -1,0 +1,32 @@
+{
+  "carta": "Charizard RC5/RC32",
+  "fonte": "MYP Cards",
+  "url": "https://mypcards.com/pokemon/produto/36248/charizard",
+  "atualizado_em": "2026-09-20T05:44:00.857563",
+  "precos": {
+    "DM": {
+      "menor": 100.0,
+      "media": 215.88,
+      "maior": 340.0,
+      "quantidade": 18
+    },
+    "MP": {
+      "menor": 100.0,
+      "media": 240.14,
+      "maior": 500.0,
+      "quantidade": 27
+    },
+    "SP": {
+      "menor": 140.0,
+      "media": 219.4,
+      "maior": 500.0,
+      "quantidade": 15
+    },
+    "NM": {
+      "menor": 200.0,
+      "media": 303.78,
+      "maior": 400.0,
+      "quantidade": 10
+    }
+  }
+}
