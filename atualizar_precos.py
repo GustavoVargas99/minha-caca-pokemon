@@ -1,5 +1,5 @@
 import json
-import random
+import os
 import re
 import time
 from datetime import datetime, timezone
@@ -14,20 +14,16 @@ INDEX = Path("index.html")
 SAIDA = Path("precos.json")
 CHECKPOINT = Path("precos_checkpoint.json")
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"
-}
-
+HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36"}
 session = requests.Session()
 session.headers.update(HEADERS)
 CONDICOES = ("NM", "SP", "MP", "DM")
 
-# Ritmo propositalmente conservador para não bombardear o MYP Cards.
-INTERVALO_REQUISICAO = 2.5
-MAX_TENTATIVAS = 5
-MAX_LINKS = 8
+# Cada execução faz apenas um pequeno lote e termina.
+LOTE = int(os.getenv("LOTE_CARTAS", "5"))
+MAX_LINKS = 5
+INTERVALO = 1.2
 ultima_requisicao = 0.0
-
 
 class BloqueioTemporario(RuntimeError):
     pass
@@ -38,48 +34,18 @@ def brl(v):
 
 
 def requisitar(url):
-    """GET com espaçamento global e backoff progressivo para 429/5xx."""
     global ultima_requisicao
-    ultimo_erro = None
-    for tentativa in range(MAX_TENTATIVAS):
-        decorrido = time.monotonic() - ultima_requisicao
-        espera = INTERVALO_REQUISICAO - decorrido
-        if espera > 0:
-            time.sleep(espera + random.uniform(0.15, 0.65))
-
-        try:
-            r = session.get(url, timeout=35)
-            ultima_requisicao = time.monotonic()
-        except requests.RequestException as e:
-            ultimo_erro = e
-            pausa = min(15 * (2 ** tentativa), 180)
-            print(f"    conexão falhou; aguardando {pausa}s ({tentativa + 1}/{MAX_TENTATIVAS})")
-            time.sleep(pausa)
-            continue
-
-        if r.status_code == 429:
-            retry_after = r.headers.get("Retry-After")
-            try:
-                pausa = int(retry_after) if retry_after else 30 * (2 ** tentativa)
-            except ValueError:
-                pausa = 30 * (2 ** tentativa)
-            pausa = min(max(pausa, 30), 300)
-            print(f"    MYP limitou as consultas (429); aguardando {pausa}s ({tentativa + 1}/{MAX_TENTATIVAS})")
-            time.sleep(pausa + random.uniform(1, 4))
-            ultimo_erro = BloqueioTemporario("HTTP 429")
-            continue
-
-        if 500 <= r.status_code < 600:
-            pausa = min(15 * (2 ** tentativa), 180)
-            print(f"    MYP respondeu {r.status_code}; aguardando {pausa}s")
-            time.sleep(pausa)
-            ultimo_erro = RuntimeError(f"HTTP {r.status_code}")
-            continue
-
-        r.raise_for_status()
-        return r
-
-    raise BloqueioTemporario(f"MYP indisponível após {MAX_TENTATIVAS} tentativas: {ultimo_erro}")
+    espera = INTERVALO - (time.monotonic() - ultima_requisicao)
+    if espera > 0:
+        time.sleep(espera)
+    try:
+        r = session.get(url, timeout=20)
+    finally:
+        ultima_requisicao = time.monotonic()
+    if r.status_code == 429:
+        raise BloqueioTemporario("HTTP 429 do MYP Cards")
+    r.raise_for_status()
+    return r
 
 
 def carregar_cartas():
@@ -97,19 +63,19 @@ def chave_carta(carta):
 def termos_busca(carta):
     nome = carta.get("name", "").strip()
     num = carta.get("num", "").strip()
-    termos = [nome]
+    termos = []
     if num and re.search(r"\d", num):
-        termos.insert(0, f"{nome} {num}")
+        termos.append(f"{nome} {num}")
+    termos.append(nome)
     simples = re.sub(r"\s*\([^)]*\)\s*", " ", nome).strip()
-    if simples and simples not in termos:
+    if simples:
         termos.append(simples)
-    return list(dict.fromkeys(termos))
+    return list(dict.fromkeys(t for t in termos if t))[:2]
 
 
-def buscar_links_myp(termo, limite=MAX_LINKS):
+def buscar_links_myp(termo):
     url = f"{BASE}/pokemon?ProdutoSearch%5Bquery%5D={quote_plus(termo)}&ProdutoSearch%5BexibirSomenteVenda%5D=1"
-    r = requisitar(url)
-    soup = BeautifulSoup(r.text, "html.parser")
+    soup = BeautifulSoup(requisitar(url).text, "html.parser")
     links = []
     for a in soup.select('a[href*="/pokemon/produto/"]'):
         href = a.get("href")
@@ -117,14 +83,13 @@ def buscar_links_myp(termo, limite=MAX_LINKS):
             full = urljoin(BASE, href.split("?")[0])
             if full not in links:
                 links.append(full)
-        if len(links) >= limite:
+        if len(links) >= MAX_LINKS:
             break
     return links
 
 
 def extrair_anuncios(url):
-    r = requisitar(url)
-    soup = BeautifulSoup(r.text, "html.parser")
+    soup = BeautifulSoup(requisitar(url).text, "html.parser")
     titulo = soup.title.get_text(" ", strip=True) if soup.title else ""
     h1 = soup.find("h1")
     h1txt = h1.get_text(" ", strip=True) if h1 else ""
@@ -174,40 +139,19 @@ def escolher(anuncios):
 
 def processar(carta):
     links = []
-    bloqueado = False
     for termo in termos_busca(carta):
-        try:
-            for link in buscar_links_myp(termo):
-                if link not in links:
-                    links.append(link)
-        except BloqueioTemporario as e:
-            print("  busca temporariamente bloqueada:", termo, e)
-            bloqueado = True
-            break
-        except Exception as e:
-            print("  busca falhou:", termo, e)
+        for link in buscar_links_myp(termo):
+            if link not in links:
+                links.append(link)
         if len(links) >= MAX_LINKS:
             break
 
-    if bloqueado and not links:
-        raise BloqueioTemporario("consulta da carta não pôde ser confirmada")
-
     produtos, anuncios = [], []
     for link in links[:MAX_LINKS]:
-        try:
-            p = extrair_anuncios(link)
-            if compatibilidade(carta, p):
-                produtos.append({"url": p["url"], "titulo": p["titulo"], "h1": p["h1"]})
-                anuncios.extend(p["anuncios"])
-        except BloqueioTemporario:
-            bloqueado = True
-            print("  produto temporariamente bloqueado; interrompendo esta carta")
-            break
-        except Exception as e:
-            print("  produto falhou:", link, e)
-
-    if bloqueado:
-        raise BloqueioTemporario("resultado incompleto por limitação temporária do MYP")
+        p = extrair_anuncios(link)
+        if compatibilidade(carta, p):
+            produtos.append({"url": p["url"], "titulo": p["titulo"], "h1": p["h1"]})
+            anuncios.extend(p["anuncios"])
 
     resultado = escolher(anuncios)
     resultado.update({
@@ -218,75 +162,73 @@ def processar(carta):
     return resultado
 
 
-def salvar(saida, checkpoint=True):
-    saida["atualizado_em"] = datetime.now(timezone.utc).isoformat()
-    destino = CHECKPOINT if checkpoint else SAIDA
-    destino.write_text(json.dumps(saida, ensure_ascii=False, indent=2), encoding="utf-8")
+def carregar_progresso():
+    for arq in (CHECKPOINT, SAIDA):
+        if arq.exists():
+            try:
+                dados = json.loads(arq.read_text(encoding="utf-8"))
+                if isinstance(dados.get("cartas"), list):
+                    return dados
+            except Exception:
+                pass
+    return {
+        "atualizado_em": None,
+        "regra": "Prioridade MYP; menor entre NM/SP; MP/DM separados para análise; mesma arte pode ser outra edição/idioma.",
+        "cartas": []
+    }
 
 
-def carregar_checkpoint():
-    if not CHECKPOINT.exists():
-        return None
-    try:
-        dados = json.loads(CHECKPOINT.read_text(encoding="utf-8"))
-        if isinstance(dados.get("cartas"), list):
-            return dados
-    except Exception:
-        pass
-    return None
+def salvar(dados, final=False):
+    dados["atualizado_em"] = datetime.now(timezone.utc).isoformat()
+    (SAIDA if final else CHECKPOINT).write_text(json.dumps(dados, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def main():
     cartas = carregar_cartas()
+    dados = carregar_progresso()
+    prontas = {x.get("_chave") for x in dados["cartas"] if x.get("_chave")}
+    pendentes = [c for c in cartas if chave_carta(c) not in prontas]
+
     print("=" * 72)
-    print("MINHA CAÇA POKÉMON - ATUALIZAÇÃO GERAL MYP CARDS")
-    print("Cartas no catálogo:", len(cartas))
+    print("MINHA CAÇA POKÉMON - ATUALIZAÇÃO EM LOTES")
+    print(f"Total: {len(cartas)} | concluídas: {len(prontas)} | pendentes: {len(pendentes)} | lote: {LOTE}")
     print("=" * 72)
 
-    saida = carregar_checkpoint() or {
-        "atualizado_em": datetime.now(timezone.utc).isoformat(),
-        "regra": "Prioridade MYP; menor entre NM/SP; MP/DM separados para análise; mesma arte pode ser outra edição/idioma.",
-        "cartas": []
-    }
-    prontas = {r.get("_chave") for r in saida["cartas"] if r.get("_chave") and not r.get("erro_temporario")}
-    if prontas:
-        print(f"Retomando checkpoint: {len(prontas)} cartas já concluídas.")
-
-    for i, carta in enumerate(cartas, 1):
+    feitas_agora = 0
+    bloqueado = False
+    for carta in pendentes[:LOTE]:
         chave = chave_carta(carta)
-        if chave in prontas:
-            print(f"[{i}/{len(cartas)}] já concluída - {carta.get('name')} {carta.get('num', '')}")
-            continue
-
-        print(f"[{i}/{len(cartas)}] {carta.get('name')} {carta.get('num', '')}")
+        print(f"Processando: {carta.get('name')} {carta.get('num', '')}")
         try:
             r = processar(carta)
-            r["_chave"] = chave
-            saida["cartas"] = [x for x in saida["cartas"] if x.get("_chave") != chave]
-            saida["cartas"].append(r)
-            melhor = r.get("melhor_nm_sp")
-            print("  ->", f"{melhor['condicao']} R$ {melhor['preco']:.2f}" if melhor else "sem NM/SP confirmado")
-            salvar(saida, checkpoint=True)
         except BloqueioTemporario as e:
-            print("  PAUSA SEGURA:", e)
-            print("  Progresso salvo. Execute novamente mais tarde; continuará das cartas pendentes.")
-            salvar(saida, checkpoint=True)
-            return
+            print(f"MYP bloqueou temporariamente ({e}). Encerrando o lote sem esperar horas.")
+            bloqueado = True
+            break
         except Exception as e:
-            print("  ERRO:", e)
-            saida["cartas"] = [x for x in saida["cartas"] if x.get("_chave") != chave]
-            saida["cartas"].append({
-                "_chave": chave, "grupo": carta.get("group"), "nome": carta.get("name"),
-                "numero": carta.get("num"), "erro": str(e), "melhor_nm_sp": None
-            })
-            salvar(saida, checkpoint=True)
+            print("Erro nesta carta; ela ficará pendente para outra execução:", e)
+            continue
 
-    # Só publica o arquivo definitivo quando todas as cartas terminarem.
-    salvar(saida, checkpoint=False)
-    if CHECKPOINT.exists():
-        CHECKPOINT.unlink()
-    print("=" * 72)
-    print("precos.json atualizado com sucesso.")
+        r["_chave"] = chave
+        dados["cartas"] = [x for x in dados["cartas"] if x.get("_chave") != chave]
+        dados["cartas"].append(r)
+        feitas_agora += 1
+        melhor = r.get("melhor_nm_sp")
+        print("  ->", f"{melhor['condicao']} R$ {melhor['preco']:.2f}" if melhor else "sem NM/SP confirmado")
+
+    salvar(dados, final=False)
+    concluidas = len({x.get("_chave") for x in dados["cartas"] if x.get("_chave")})
+    print(f"Lote encerrado: {feitas_agora} nova(s) carta(s). Progresso: {concluidas}/{len(cartas)}.")
+
+    if concluidas >= len(cartas):
+        salvar(dados, final=True)
+        if CHECKPOINT.exists():
+            CHECKPOINT.unlink()
+        print("TODAS AS CARTAS CONCLUÍDAS. precos.json publicado.")
+    elif bloqueado:
+        print("O próximo workflow retomará exatamente das pendentes.")
+    else:
+        print("Lote concluído normalmente. O próximo workflow continuará das pendentes.")
 
 
 if __name__ == "__main__":
