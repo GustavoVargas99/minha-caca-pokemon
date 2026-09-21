@@ -1,4 +1,4 @@
-name: Atualizar preços faltantes wishlist
+name: Corrigir preços online verificados
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Atualizar preços faltantes verificados
+      - name: Aplicar ofertas atuais confirmadas
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -23,34 +23,27 @@ jobs:
           m=re.search(r'const cards=(\[.*?\]);',s,re.S)
           if not m: raise SystemExit('cards não encontrado')
           cards=json.loads(m.group(1))
+          # Somente ofertas atuais confirmadas diretamente no MYP Cards.
+          # Não usar resultados antigos/indexados como preço válido.
           vals={
-            'Charizard V 132/127':(1350.00,'MYP Cards • menor encontrado online • 21/09/2026'),
-            'Charizard ex 199/165':(2500.00,'MYP Cards • NM • menor encontrado online • 21/09/2026'),
-            'Mega Charizard X ex 130/094':(1190.00,'MYP Cards • NM • menor encontrado online • 21/09/2026'),
-            'Charizard SWSH066':(499.00,'MYP Cards • NM • Foil • menor encontrado online • 21/09/2026'),
-            'Mega Charizard X ex 125/094':(1300.00,'MYP Cards • menor indicado na página • 21/09/2026'),
-            'Charizard TG03/TG30':(229.99,'MYP Cards • NM • menor NM encontrado online • 21/09/2026'),
-            'Ancient Mew':(1200.00,'MYP Cards • NM • menor encontrado online • 21/09/2026'),
-            'Zapdos ex 202/165':(179.00,'MYP Cards • NM • menor encontrado online • 21/09/2026'),
-            "Misty's Vitality 111/084":(100.00,'MYP Cards • menor indicado para 111/084 • 21/09/2026'),
-            'Watchog 097/086':(3.99,'MYP Cards • NM • menor encontrado online • 21/09/2026'),
-            "Ash's Friendship 025/026":(550.00,'MYP Cards • NM • menor encontrado online • 21/09/2026')
+            'Zapdos ex 202/165':(390.00,'MYP Cards • página da carta • 19 unidades a partir de R$390 • verificado em 21/09/2026'),
+            'Mewtwo 052/∞':(39.99,'MYP Cards • NM • oferta atual disponível • verificado em 21/09/2026'),
           }
           changed=0
           for c in cards:
-            if c.get('group')=='Wishlist' and c.get('name') in vals and c.get('price') is None:
+            if c.get('group')=='Wishlist' and c.get('name') in vals:
               price,note=vals[c['name']]
-              c['price']=price; c['note']=note; c['status']='verificado'; changed+=1
+              if c.get('price')!=price or c.get('note')!=note:
+                c['price']=price; c['note']=note; c['status']='verificado'; changed+=1
           new='const cards='+json.dumps(cards,ensure_ascii=False,separators=(',',':'))+';'
           s=s[:m.start()]+new+s[m.end():]
-          s=re.sub(r'atualizado em \d{2}/\d{2}/\d{4}','atualizado em 21/09/2026',s)
           p.write_text(s,encoding='utf-8')
-          print('Preços adicionados:',changed)
+          print('Preços corrigidos/adicionados:',changed)
           PY
       - name: Commit
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Completa preços faltantes da wishlist - 21-09-2026' || exit 0
+          git commit -m 'Corrige preços online verificados - 21-09-2026' || exit 0
           git push
