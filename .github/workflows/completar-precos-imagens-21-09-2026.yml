@@ -1,0 +1,52 @@
+name: Completar preços e imagens faltantes
+on:
+  push:
+    paths:
+      - '.github/workflows/completar-precos-imagens-21-09-2026.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Completar dados confirmados
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          m=re.search(r'const cards=(\[.*?\]);',s,re.S); cards=json.loads(m.group(1))
+          # Valores confirmados nos prints enviados pelo usuário em 21/09/2026.
+          price_by_key={
+            "erika's jigglypuff":79.00,
+            "jigglypuff da erika":79.00,
+            "jigglypuff da érica":79.00,
+          }
+          # Imagens públicas exatas já conhecidas/confirmadas para cartas que estavam sem imagem.
+          img_by_key={
+            "erika's jigglypuff":"https://images.pokemontcg.io/gym2/69_hires.png",
+            "jigglypuff da erika":"https://images.pokemontcg.io/gym2/69_hires.png",
+            "jigglypuff da érica":"https://images.pokemontcg.io/gym2/69_hires.png",
+          }
+          changed=[]
+          for c in cards:
+            n=c.get('name','').lower().strip()
+            for k,v in price_by_key.items():
+              if k in n and c.get('price') is None:
+                c['price']=v; c['status']='verificado'; c['note']='Print enviado pelo usuário • menor preço exibido • 21/09/2026'; changed.append(('preço',c.get('name'),v)); break
+            if not c.get('img'):
+              for k,u in img_by_key.items():
+                if k in n:
+                  c['img']=u; changed.append(('imagem',c.get('name'),u)); break
+          new='const cards='+json.dumps(cards,ensure_ascii=False,separators=(',',':'))+';'
+          p.write_text(s[:m.start()]+new+s[m.end():],encoding='utf-8')
+          print(*changed,sep='\n')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Completa preço e imagem confirmados - 21-09-2026' || exit 0
+          git push
