@@ -1,4 +1,4 @@
-name: Atualizar preços wishlist
+name: Atualizar mais preços
 
 on:
   push:
@@ -13,38 +13,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Atualizar preços verificados
+      - name: Atualizar mais preços verificados
         run: |
           python3 - <<'PY'
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          replacements={
-            '"name": "Charizard RC5/RC32", "num": "Generations", "img": "https://images.pokemontcg.io/g1/RC5_hires.png", "price": 140.0, "note": "SP não-foil; foil SP ~R$170"':'"name": "Charizard RC5/RC32", "num": "Generations", "img": "https://images.pokemontcg.io/g1/RC5_hires.png", "price": 30.0, "note": "MYP Cards • SP • Foil • menor verificado em 21/09/2026"',
-            '"name": "Charizard ex 199/165", "num": "Pokémon 151", "img": "https://images.pokemontcg.io/sv3pt5/199_hires.png", "price": null, "note": "Pesquisar menor Liga/MYP", "status": "pesquisar"':'"name": "Charizard ex 199/165", "num": "Pokémon 151", "img": "https://images.pokemontcg.io/sv3pt5/199_hires.png", "price": 2699.90, "note": "MYP Cards • SP • menor original verificado em 21/09/2026", "status": "verificado"',
-            '"name": "Charizard SWSH066", "num": "Promo SWSH", "img": "https://images.pokemontcg.io/swshp/SWSH066_hires.png", "price": null, "note": "", "status": "pesquisar"':'"name": "Charizard SWSH066", "num": "Promo SWSH", "img": "https://images.pokemontcg.io/swshp/SWSH066_hires.png", "price": 499.0, "note": "MYP Cards • NM • Foil • verificado em 21/09/2026", "status": "verificado"',
-            '"name": "Charizard TG03/TG30", "num": "Lost Origin TG", "img": "https://images.pokemontcg.io/swsh11tg/TG03_hires.png", "price": null, "note": "", "status": "pesquisar"':'"name": "Charizard TG03/TG30", "num": "Lost Origin TG", "img": "https://images.pokemontcg.io/swsh11tg/TG03_hires.png", "price": 100.0, "note": "MYP Cards • NM • verificado em 21/09/2026", "status": "verificado"',
-            '"name": "Ancient Mew", "num": "Promo", "img": "", "price": null, "note": "", "status": "pesquisar"':'"name": "Ancient Mew", "num": "Promo", "img": "", "price": 550.0, "note": "MYP Cards • NM • Foil • verificado em 21/09/2026", "status": "verificado"',
-            '"name": "Zapdos ex 202/165", "num": "Pokémon 151", "img": "https://images.pokemontcg.io/sv3pt5/202_hires.png", "price": null, "note": "", "status": "pesquisar"':'"name": "Zapdos ex 202/165", "num": "Pokémon 151", "img": "https://images.pokemontcg.io/sv3pt5/202_hires.png", "price": 390.0, "note": "MYP Cards • menor anúncio indicado • verificado em 21/09/2026", "status": "verificado"',
-            '"name": "Misty\'s Vitality 111/084", "num": "", "img": "", "price": null, "note": "", "status": "pesquisar"':'"name": "Misty\'s Vitality 111/084", "num": "", "img": "", "price": 100.0, "note": "MYP Cards • NM • verificado em 21/09/2026", "status": "verificado"'
+          vals={
+            ('Dark Arbok','19/82'):(120.0,'MYP Cards • NM • Foil • verificado em 21/09/2026'),
+            ('Dark Vileplume','30/82'):(15.0,'MYP Cards • SP • verificado em 21/09/2026'),
+            ('Dark Weezing','31/82'):(15.0,'MYP Cards • NM • verificado em 21/09/2026'),
+            ('Dark Charmeleon','32/82'):(25.0,'MYP Cards • NM • verificado em 21/09/2026'),
+            ('Dark Gloom','36/82'):(20.0,'MYP Cards • NM • verificado em 21/09/2026'),
+            ('Dark Vaporeon','45/82'):(15.0,'MYP Cards • SP • verificado em 21/09/2026'),
           }
+          import re
           changed=0
-          for old,new in replacements.items():
-              if old in s:
-                  s=s.replace(old,new,1); changed+=1
-              else:
-                  print('Não encontrado:', old[:80])
-          if changed != len(replacements):
-              raise SystemExit(f'Esperava {len(replacements)} alterações, fiz {changed}')
+          for (name,num),(price,note) in vals.items():
+              pat=r'(\{"group": "Team Rocket Dark", "name": "'+re.escape(name)+r'", "num": "'+re.escape(num)+r'", "img": "[^"]*", )"price": null, "note": "[^"]*", "status": "pesquisar"'
+              repl=r'\1"price": '+str(price)+', "note": "'+note+r'", "status": "verificado"'
+              s,n=re.subn(pat,repl,s,count=1)
+              changed+=n
+              print(name,num,'alterado' if n else 'não encontrado')
+          if changed==0:
+              raise SystemExit('Nenhuma alteração encontrada')
           p.write_text(s,encoding='utf-8')
-          print('Alterações:',changed)
+          print('Total de novos preços:',changed)
           PY
       - name: Commit
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Atualiza primeiro bloco de preços da wishlist'
+          git commit -m 'Adiciona mais preços verificados Team Rocket'
           git push
-
-# execução solicitada em 21/09/2026
