@@ -2,6 +2,10 @@ name: Atualizar preços Pokémon
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - 'precos.json'
+      - 'aplicar_precos.py'
   schedule:
     - cron: "17 */2 * * *"
 
@@ -16,29 +20,19 @@ jobs:
   atualizar:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-
     steps:
       - name: Baixar catálogo
         uses: actions/checkout@v4
-
       - name: Preparar Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
-      - name: Instalar dependências
-        run: pip install requests beautifulsoup4
-
-      - name: Executar atualizador
-        env:
-          LOTE_CARTAS: "5"
-        run: python -u atualizar_precos.py
-
-      - name: Salvar alterações
-        if: always()
+      - name: Aplicar preços manuais ao site
+        run: python -u aplicar_precos.py
+      - name: Salvar site
         run: |
           git config user.name "Minha Caça Pokémon"
           git config user.email "actions@github.com"
-          git add precos.json precos_checkpoint.json 2>/dev/null || true
-          git diff --cached --quiet || git commit -m "Atualiza lote de preços Pokémon"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Aplica preços verificados ao site"
           git push
