@@ -1,0 +1,57 @@
+name: Completar cartas restantes dos prints
+on:
+  push:
+    paths:
+      - '.github/workflows/completar-restantes-prints-21-09-2026.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Completar preços que faltaram
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re,unicodedata
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          m=re.search(r'const cards=(\[.*?\]);',s,re.S); cards=json.loads(m.group(1))
+          def norm(x):
+            x=unicodedata.normalize('NFKD',x).encode('ascii','ignore').decode().lower()
+            return re.sub(r'[^a-z0-9]+',' ',x).strip()
+          rules=[
+            (['erika s jigglypuff','jigglypuff de erika','jigglypuff da erika','jigglypuff de africa'],79.00),
+            (['charizard'],2200.00),
+            (['crobat'],55.58),
+            (['giratina'],83.82),
+            (['magikarp'],707.75),
+            (['n'],149.90),
+            (['pikachu'],244.23),
+          ]
+          changed=[]
+          for c in cards:
+            if c.get('price') is not None: continue
+            n=norm(c.get('name',''))
+            for aliases,v in rules:
+              ok=False
+              for a in aliases:
+                a=norm(a)
+                if a=='n': ok=(n=='n' or n.startswith('n '))
+                elif a=='pikachu': ok=(n=='pikachu' or (n.startswith('pikachu ') and 'zekrom' not in n))
+                elif a=='charizard': ok=(n=='charizard' or n.startswith('charizard ')) and not any(z in n for z in ['ex','vmax','v ','dark','sombrio','shining'])
+                else: ok=(a in n)
+                if ok: break
+              if ok:
+                c['price']=v; c['status']='verificado'; c['note']='Print enviado pelo usuário • menor preço exibido • 21/09/2026'; changed.append((c.get('name'),v)); break
+          s=s[:m.start()]+'const cards='+json.dumps(cards,ensure_ascii=False,separators=(',',':'))+';'+s[m.end():]
+          p.write_text(s,encoding='utf-8')
+          print('Alterados:',len(changed)); print(*changed,sep='\n')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Completa preços restantes dos prints - 21-09-2026' || exit 0
+          git push
