@@ -1,0 +1,75 @@
+name: Aplicar preços dos prints
+on:
+  push:
+    paths: ['.github/workflows/aplicar-precos-prints.yml']
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Aplicar menores preços conferidos nos prints
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          m=re.search(r'const cards=(\[.*?\]);\s*const',s,re.S)
+          if not m: m=re.search(r'const cards=(\[.*?\]);',s,re.S)
+          cards=json.loads(m.group(1))
+          vals={
+          ('Maushold','146/128'):150.00,('Meowth de Alola','139/128'):110.00,('Articuno','112/128'):108.90,('Moltres','114/128'):99.99,('Lapras','131/128'):90.00,
+          ('Mew ex','053/128'):78.00,('Zorua de Hisui','138/128'):69.90,('Meowth de Galar','143/128'):65.00,('Zapdos','113/128'):59.90,('Morpeko',''):49.99,
+          ('Kommo-o','114/128'):49.90,('Toxtricity',''):44.00,('Chandelure','075/128'):35.00,('Gengar ex',''):30.00,('Gholdengo','140/128'):29.90,
+          ('Drifloon','077/128'):29.89,('Exeggutor de Alola','128/128'):28.90,('Lycanroc','130/128'):25.00,('Pikachu','042/128'):25.00,('Umbreon ex','092/128'):22.50,
+          ('Espeon ex','070/128'):21.99,('Pikachu','027/128'):20.00,('Pikachu ex','051/128'):20.00,('Scraggy','103/128'):20.00,('Pikachu','040/128'):19.99,
+          ('Pikachu','030/128'):19.99,('Pikachu ex','053/128'):19.99,('Greninja ex','021/128'):19.00,('Pikachu','038/128'):17.50,('Sylveon ex','071/128'):16.00,
+          ('Pikachu','028/128'):15.00,('Pikachu','032/128'):15.00,('Pikachu','035/128'):15.00,('Pikachu','046/128'):15.00,('Pikachu','049/128'):14.99,
+          ('Pikachu','055/128'):14.99,('Pikachu','062/128'):14.99,('Pikachu','067/128'):14.90,('Mewtwo ex','084/128'):14.90,('Poké Tablet','126/128'):14.89,
+          ('Pikachu','058/128'):13.99,('Pikachu','024/128'):13.50,('Pikachu','041/128'):13.50,('Pikachu','048/128'):13.50,('Pikachu','026/128'):12.99,
+          ('Pikachu','014/128'):12.50,('Pikachu','022/128'):12.00,('Pikachu','036/128'):12.00,('Pikachu','044/128'):10.99,('Pikachu','050/128'):10.00,
+          ('Pikachu','060/128'):10.00,('Pikachu',''):9.50,('Salamence ex','108/128'):9.00,('Pikachu','033/128'):8.00,('Espeon',''):6.00,
+          ('Fuecoco ex',''):6.00,('Mew','066/128'):6.00,('Moltres',''):5.00,('Igglybuff','123/128'):5.00,('Lugia',''):4.99,
+          ('Lapras','017/128'):4.00,('Ho-Oh','012/128'):3.00,('Lucario','088/128'):2.99,('Unown','072/128'):2.98,('Victini','013/128'):2.40,
+          ('Eevee','114/128'):2.00,('Volbeat','083/128'):2.00,('Slowpoke','016/128'):2.00,('Mewtwo','096/128'):2.00,('Kangaskhan','114/128'):2.00,
+          ('Substituição','127/128'):2.00,('Zweilous','099/128'):1.99,('Hydreigon','099/128'):1.99,('Zacian','106/128'):1.99,('Zoroark de Hisui','121/128'):1.99,
+          ('Maushold','125/128'):1.99,('Articuno','018/128'):1.98,('Chandelure','075/128'):1.97,('Zeraora','057/128'):1.50,('Eevee','117/128'):1.50,
+          ('Ninetales','010/128'):1.50,('Kyogre','019/128'):1.50,('Palkia','020/128'):1.50,('Zapdos','055/128'):1.50,('Azumarill','068/128'):1.50,
+          ('Comfey','077/128'):1.50,('Dialga','102/128'):1.50,('Toxtricity','059/128'):1.49,('Cherrim','007/128'):1.00,('Miraidon','052/128'):1.00,
+          ('Lycanroc','085/128'):1.00,('Ditto',''):1.00,('Snorlax',''):1.00,('Minior','124/128'):1.00,('Zekrom',''):0.99,('Marill',''):0.99,
+          ('Drifloon','077/128'):0.99,('Cresselia','074/128'):0.99,('Xerneas','076/128'):0.99,('Cosmog','074/128'):0.99,('Cosmoem','079/128'):0.99,
+          ('Groudon','082/128'):0.99,('Zorua','095/128'):0.99,('Yveltal','100/128'):0.99,('Zamazenta','107/128'):0.99,('Kommo-o','112/128'):0.99,
+          ('Meowth','113/128'):0.99,('Eevee','116/128'):0.99,('Zorua de Hisui','122/128'):0.99,('Exeggcute','001/128'):0.50,('Exeggutor de Alola','002/128'):0.50,
+          ('Illumise','006/128'):0.50,('Cherubi','006/128'):0.50,('Vivillon','008/128'):0.50,('Vulpix','009/128'):0.50,('Reshiram','014/128'):0.50,
+          ('Toxel','058/128'):0.50,('Morpeko','061/128'):0.50,('Koraidon','086/128'):0.50,('Nidoran Fêmea','087/128'):0.50,('Nidorina','088/128'):0.50,
+          ('Scraggy','098/128'):0.50,('Zoroark',''):0.50,('Deino','091/128'):0.50,('Ferrothorn','118/128'):0.50,('Solgaleo',''):0.50,
+          ('Jangmo-o','110/128'):0.50,('Tropius','005/128'):0.49,('Lunala',''):0.49,('Meowth de Alola','089/128'):0.49,('Murkrow',''):0.49,
+          ('Gholdengo','140/128'):0.49,('Hakamo-o','111/128'):0.30,('Wishiwashi',''):0.29,('Seismitoad',''):0.20,('Gimmighoul',''):0.19}
+          def norm(x):
+            return (x or '').lower().replace('’',"'").replace('–','-')
+          changed=0
+          for c in cards:
+            best=None; src=None
+            for (name,num),price in vals.items():
+              cn=norm(c.get('name')); nn=norm(name); cnum=norm(c.get('num'))
+              nameok=(nn in cn or cn in nn) if nn else False
+              numok=(not num) or (norm(num) in cn or norm(num) in cnum)
+              if nameok and numok and (best is None or price<best): best=price; src=(name,num)
+            if best is not None:
+              old=c.get('price')
+              if old is None or best < float(old):
+                c['price']=best; c['status']='verificado'; c['note']='Menor dos prints LigaPokémon/MYP Cards • 21/09/2026'
+                changed+=1
+          new='const cards='+json.dumps(cards,ensure_ascii=False,separators=(',',':'))+';'
+          s=s[:m.start()]+new+s[m.end():]
+          p.write_text(s,encoding='utf-8')
+          print('Preços atualizados:',changed)
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Atualiza menores preços pelos prints Liga e MYP' || exit 0
+          git push
