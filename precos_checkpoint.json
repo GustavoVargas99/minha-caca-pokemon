@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-09-21T06:32:49.210220+00:00",
+  "atualizado_em": "2026-09-21T08:27:20.598098+00:00",
   "regra": "Prioridade MYP; menor entre NM/SP; MP/DM separados para análise; mesma arte pode ser outra edição/idioma.",
   "cartas": [
     {
@@ -1684,6 +1684,202 @@
         }
       ],
       "_chave": "Team Rocket Dark|Dark Blastoise|20/82|https://images.pokemontcg.io/base5/20_hires.png"
+    },
+    {
+      "melhor_nm_sp": {
+        "condicao": "SP",
+        "preco": 790.0,
+        "url": "https://mypcards.com/pokemon/produto/40979/dark-charizard",
+        "detalhe": "Nenhum risco ou dobra, apenas desgaste leve de manuseio/jogo. 1 un."
+      },
+      "menor_por_condicao": {
+        "NM": {
+          "condicao": "NM",
+          "preco": 1250.0,
+          "url": "https://mypcards.com/pokemon/produto/40979/dark-charizard",
+          "detalhe": "1 un."
+        },
+        "SP": {
+          "condicao": "SP",
+          "preco": 790.0,
+          "url": "https://mypcards.com/pokemon/produto/40979/dark-charizard",
+          "detalhe": "Nenhum risco ou dobra, apenas desgaste leve de manuseio/jogo. 1 un."
+        },
+        "MP": {
+          "condicao": "MP",
+          "preco": 989.9,
+          "url": "https://mypcards.com/pokemon/produto/40979/dark-charizard",
+          "detalhe": "1 un."
+        },
+        "DM": {
+          "condicao": "DM",
+          "preco": 400.0,
+          "url": "https://mypcards.com/pokemon/produto/40962/dark-charizard",
+          "detalhe": "O pequeno arranhão em branco é o motivo de estar como DM. 1 un."
+        }
+      },
+      "mp_dm_para_analisar": [
+        {
+          "condicao": "MP",
+          "preco": 989.9,
+          "url": "https://mypcards.com/pokemon/produto/40979/dark-charizard",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 1750.0,
+          "url": "https://mypcards.com/pokemon/produto/40962/dark-charizard",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 400.0,
+          "url": "https://mypcards.com/pokemon/produto/40962/dark-charizard",
+          "detalhe": "O pequeno arranhão em branco é o motivo de estar como DM. 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 1700.0,
+          "url": "https://mypcards.com/pokemon/produto/40962/dark-charizard",
+          "detalhe": "Não é 1º edição. 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 1800.0,
+          "url": "https://mypcards.com/pokemon/produto/40962/dark-charizard",
+          "detalhe": "1 un."
+        }
+      ],
+      "total_anuncios": 11,
+      "grupo": "Team Rocket Dark",
+      "nome": "Dark Charizard",
+      "numero": "21/82",
+      "imagem_referencia": "https://images.pokemontcg.io/base5/21_hires.png",
+      "fonte_prioritaria": "MYP Cards",
+      "produtos_compativeis": [
+        {
+          "url": "https://mypcards.com/pokemon/produto/40962/dark-charizard",
+          "titulo": "Dark Charizard (004/82) | Pokémon | MYP Cards",
+          "h1": "Dark Charizard (004/82)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/40979/dark-charizard",
+          "titulo": "Dark Charizard (021/82) | Pokémon | MYP Cards",
+          "h1": "Dark Charizard (021/82)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/415604/dark-charizard",
+          "titulo": "Dark Charizard (033/065) | Pokémon | MYP Cards",
+          "h1": "Dark Charizard (033/065)"
+        }
+      ],
+      "_chave": "Team Rocket Dark|Dark Charizard|21/82|https://images.pokemontcg.io/base5/21_hires.png"
+    },
+    {
+      "melhor_nm_sp": {
+        "condicao": "SP",
+        "preco": 250.0,
+        "url": "https://mypcards.com/pokemon/produto/41056/dark-dragonite",
+        "detalhe": "1 un."
+      },
+      "menor_por_condicao": {
+        "NM": {
+          "condicao": "NM",
+          "preco": 3000.0,
+          "url": "https://mypcards.com/pokemon/produto/40963/dark-dragonite",
+          "detalhe": "1 un."
+        },
+        "SP": {
+          "condicao": "SP",
+          "preco": 250.0,
+          "url": "https://mypcards.com/pokemon/produto/41056/dark-dragonite",
+          "detalhe": "1 un."
+        },
+        "MP": {
+          "condicao": "MP",
+          "preco": 250.0,
+          "url": "https://mypcards.com/pokemon/produto/41056/dark-dragonite",
+          "detalhe": "Dragonite Sombrio 15/109, EX Team Rocket Returns (2005), condição MP, com desgas 1 un."
+        },
+        "DM": {
+          "condicao": "DM",
+          "preco": 80.0,
+          "url": "https://mypcards.com/pokemon/produto/41056/dark-dragonite",
+          "detalhe": "bordas desgastadas e crease 1 un."
+        }
+      },
+      "mp_dm_para_analisar": [
+        {
+          "condicao": "MP",
+          "preco": 250.0,
+          "url": "https://mypcards.com/pokemon/produto/41056/dark-dragonite",
+          "detalhe": "Dragonite Sombrio 15/109, EX Team Rocket Returns (2005), condição MP, com desgas 1 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 450.0,
+          "url": "https://mypcards.com/pokemon/produto/41056/dark-dragonite",
+          "detalhe": "1 un."
+        },
+        {
+          "condicao": "MP",
+          "preco": 555.0,
+          "url": "https://mypcards.com/pokemon/produto/41056/dark-dragonite",
+          "detalhe": "2 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 80.0,
+          "url": "https://mypcards.com/pokemon/produto/41056/dark-dragonite",
+          "detalhe": "bordas desgastadas e crease 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 129.9,
+          "url": "https://mypcards.com/pokemon/produto/41056/dark-dragonite",
+          "detalhe": "D+ Pedir foto ou video da carta. Carta linda 1 un."
+        },
+        {
+          "condicao": "DM",
+          "preco": 200.0,
+          "url": "https://mypcards.com/pokemon/produto/41056/dark-dragonite",
+          "detalhe": "1 un."
+        }
+      ],
+      "total_anuncios": 16,
+      "grupo": "Team Rocket Dark",
+      "nome": "Dark Dragonite",
+      "numero": "22/82",
+      "imagem_referencia": "https://images.pokemontcg.io/base5/22_hires.png",
+      "fonte_prioritaria": "MYP Cards",
+      "produtos_compativeis": [
+        {
+          "url": "https://mypcards.com/pokemon/produto/41056/dark-dragonite",
+          "titulo": "Dark Dragonite (015/109) | Pokémon | MYP Cards",
+          "h1": "Dark Dragonite (015/109)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/40963/dark-dragonite",
+          "titulo": "Dark Dragonite (005/82) | Pokémon | MYP Cards",
+          "h1": "Dark Dragonite (005/82)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/36891/dark-dragonite",
+          "titulo": "Dark Dragonite (005/110) | Pokémon | MYP Cards",
+          "h1": "Dark Dragonite (005/110)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/40980/dark-dragonite",
+          "titulo": "Dark Dragonite (022/82) | Pokémon | MYP Cards",
+          "h1": "Dark Dragonite (022/82)"
+        },
+        {
+          "url": "https://mypcards.com/pokemon/produto/415605/dark-dragonite",
+          "titulo": "Dark Dragonite (034/065) | Pokémon | MYP Cards",
+          "h1": "Dark Dragonite (034/065)"
+        }
+      ],
+      "_chave": "Team Rocket Dark|Dark Dragonite|22/82|https://images.pokemontcg.io/base5/22_hires.png"
     }
   ]
 }
