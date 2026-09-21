@@ -1,4 +1,4 @@
-name: Atualizar mais preços
+name: Atualizar preços faltantes wishlist
 
 on:
   push:
@@ -13,37 +13,44 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Atualizar mais preços verificados
+      - name: Atualizar preços faltantes verificados
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import json,re
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
+          m=re.search(r'const cards=(\[.*?\]);',s,re.S)
+          if not m: raise SystemExit('cards não encontrado')
+          cards=json.loads(m.group(1))
           vals={
-            ('Dark Arbok','19/82'):(120.0,'MYP Cards • NM • Foil • verificado em 21/09/2026'),
-            ('Dark Vileplume','30/82'):(15.0,'MYP Cards • SP • verificado em 21/09/2026'),
-            ('Dark Weezing','31/82'):(15.0,'MYP Cards • NM • verificado em 21/09/2026'),
-            ('Dark Charmeleon','32/82'):(25.0,'MYP Cards • NM • verificado em 21/09/2026'),
-            ('Dark Gloom','36/82'):(20.0,'MYP Cards • NM • verificado em 21/09/2026'),
-            ('Dark Vaporeon','45/82'):(15.0,'MYP Cards • SP • verificado em 21/09/2026'),
+            'Charizard V 132/127':(1350.00,'MYP Cards • menor encontrado online • 21/09/2026'),
+            'Charizard ex 199/165':(2500.00,'MYP Cards • NM • menor encontrado online • 21/09/2026'),
+            'Mega Charizard X ex 130/094':(1190.00,'MYP Cards • NM • menor encontrado online • 21/09/2026'),
+            'Charizard SWSH066':(499.00,'MYP Cards • NM • Foil • menor encontrado online • 21/09/2026'),
+            'Mega Charizard X ex 125/094':(1300.00,'MYP Cards • menor indicado na página • 21/09/2026'),
+            'Charizard TG03/TG30':(229.99,'MYP Cards • NM • menor NM encontrado online • 21/09/2026'),
+            'Ancient Mew':(1200.00,'MYP Cards • NM • menor encontrado online • 21/09/2026'),
+            'Zapdos ex 202/165':(179.00,'MYP Cards • NM • menor encontrado online • 21/09/2026'),
+            "Misty's Vitality 111/084":(100.00,'MYP Cards • menor indicado para 111/084 • 21/09/2026'),
+            'Watchog 097/086':(3.99,'MYP Cards • NM • menor encontrado online • 21/09/2026'),
+            "Ash's Friendship 025/026":(550.00,'MYP Cards • NM • menor encontrado online • 21/09/2026')
           }
-          import re
           changed=0
-          for (name,num),(price,note) in vals.items():
-              pat=r'(\{"group": "Team Rocket Dark", "name": "'+re.escape(name)+r'", "num": "'+re.escape(num)+r'", "img": "[^"]*", )"price": null, "note": "[^"]*", "status": "pesquisar"'
-              repl=r'\1"price": '+str(price)+', "note": "'+note+r'", "status": "verificado"'
-              s,n=re.subn(pat,repl,s,count=1)
-              changed+=n
-              print(name,num,'alterado' if n else 'não encontrado')
-          if changed==0:
-              raise SystemExit('Nenhuma alteração encontrada')
+          for c in cards:
+            if c.get('group')=='Wishlist' and c.get('name') in vals and c.get('price') is None:
+              price,note=vals[c['name']]
+              c['price']=price; c['note']=note; c['status']='verificado'; changed+=1
+          new='const cards='+json.dumps(cards,ensure_ascii=False,separators=(',',':'))+';'
+          s=s[:m.start()]+new+s[m.end():]
+          s=re.sub(r'atualizado em \d{2}/\d{2}/\d{4}','atualizado em 21/09/2026',s)
           p.write_text(s,encoding='utf-8')
-          print('Total de novos preços:',changed)
+          print('Preços adicionados:',changed)
           PY
       - name: Commit
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Adiciona mais preços verificados Team Rocket'
+          git commit -m 'Completa preços faltantes da wishlist - 21-09-2026' || exit 0
           git push
