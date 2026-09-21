@@ -1,5 +1,5 @@
 {
-  "atualizado_em": "2026-09-21T00:32:40.182267+00:00",
+  "atualizado_em": "2026-09-21T02:25:37.251112+00:00",
   "regra": "Prioridade MYP; menor entre NM/SP; MP/DM separados para análise; mesma arte pode ser outra edição/idioma.",
   "cartas": [
     {
@@ -1261,6 +1261,54 @@
         }
       ],
       "_chave": "Wishlist|Ash's Friendship 025/026|SMD|"
+    },
+    {
+      "melhor_nm_sp": null,
+      "menor_por_condicao": {
+        "NM": null,
+        "SP": null,
+        "MP": null,
+        "DM": null
+      },
+      "mp_dm_para_analisar": [],
+      "total_anuncios": 0,
+      "grupo": "Wishlist",
+      "nome": "Ash's Pikachu-GX 005/026",
+      "numero": "SMD",
+      "imagem_referencia": "",
+      "fonte_prioritaria": "MYP Cards",
+      "produtos_compativeis": [
+        {
+          "url": "https://mypcards.com/pokemon/produto/381499/ashs-pikachu-gx",
+          "titulo": "Ash&#039;s Pikachu-GX (005/026) | Pokémon | MYP Cards",
+          "h1": "Ash's Pikachu-GX (005/026)"
+        }
+      ],
+      "_chave": "Wishlist|Ash's Pikachu-GX 005/026|SMD|"
+    },
+    {
+      "melhor_nm_sp": null,
+      "menor_por_condicao": {
+        "NM": null,
+        "SP": null,
+        "MP": null,
+        "DM": null
+      },
+      "mp_dm_para_analisar": [],
+      "total_anuncios": 0,
+      "grupo": "Wishlist",
+      "nome": "Ash's Treecko 036/063",
+      "numero": "ADVP",
+      "imagem_referencia": "",
+      "fonte_prioritaria": "MYP Cards",
+      "produtos_compativeis": [
+        {
+          "url": "https://mypcards.com/pokemon/produto/453276/ashs-treecko",
+          "titulo": "Ash&#039;s Treecko (036/ADV-P) | Pokémon | MYP Cards",
+          "h1": "Ash's Treecko (036/ADV-P)"
+        }
+      ],
+      "_chave": "Wishlist|Ash's Treecko 036/063|ADVP|"
     }
   ]
 }
