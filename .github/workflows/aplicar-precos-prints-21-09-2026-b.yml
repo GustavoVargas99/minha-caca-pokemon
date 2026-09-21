@@ -1,0 +1,48 @@
+name: Aplicar novos preços dos prints 21-09-2026
+on:
+  push:
+    paths:
+      - '.github/workflows/aplicar-precos-prints-21-09-2026-b.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Aplicar preços confirmados
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          m=re.search(r'const cards=(\[.*?\]);',s,re.S)
+          cards=json.loads(m.group(1))
+          vals={
+          'arceus v-astro':72.27,'buzzwole-gx':79.88,'buzzwole gx':79.88,'celebi luminescente':389.00,
+          'cresselia':199.00,'delcatty':50.03,'genesect ex':41.79,'gengar':565.25,
+          'jigglypuff de áfrica':79.00,'lugia':1699.00,'m gardevoir ex':190.00,'metagross':99.98,
+          'mew vmax':89.00,'misty':149.99,'palkia':93.98,'pikachu e zekrom-gx':199.00,
+          'pikachu & zekrom-gx':199.00,'raikou':49.90,'rayquaza ex':199.00,'scizor ex':99.99,
+          'sneasel':56.73,'solgaleo-gx':79.98,'solgaleo gx':79.98,'tyranitar sombrio':151.91,
+          'uxie':99.99,'zacian v':299.00
+          }
+          changed=[]
+          for c in cards:
+            if c.get('price') is not None: continue
+            n=c.get('name','').lower().strip()
+            hits=[(k,v) for k,v in vals.items() if k==n or n.startswith(k+' ') or n.startswith(k+'-')]
+            if len(hits)==1:
+              k,v=hits[0]; c['price']=v; c['status']='verificado'; c['note']='Print enviado pelo usuário • menor preço exibido • 21/09/2026'; changed.append((c.get('name'),v))
+          new='const cards='+json.dumps(cards,ensure_ascii=False,separators=(',',':'))+';'
+          s=s[:m.start()]+new+s[m.end():]
+          p.write_text(s,encoding='utf-8')
+          print('Alterados:',len(changed)); print(*changed,sep='\n')
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Atualiza preços confirmados dos novos prints - 21-09-2026' || exit 0
+          git push
